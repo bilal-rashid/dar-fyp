@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://E:\Taimoor TEO\BeGreat\Attendance.iml" filepath="E:\Taimoor TEO\BeGreat\Attendance.iml" />
+      <module fileurl="file://E:\Jahangir\BeGreat-first-prod\BeGreat.iml" filepath="E:\Jahangir\BeGreat-first-prod\BeGreat.iml" />
+      <module fileurl="file://$PROJECT_DIR$/BeGreat-first-prod.iml" filepath="$PROJECT_DIR$/BeGreat-first-prod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+    </modules>
+  </component>
+</project>

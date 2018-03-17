@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:padding="@dimen/spacing_large"
+            android:layout_height="match_parent">
+            <com.makeramen.roundedimageview.RoundedImageView
+                android:id="@+id/image_user"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginBottom="@dimen/spacing_medium"
+                android:layout_marginTop="@dimen/spacing_medium"
+                android:contentDescription=""
+                android:scaleType="centerCrop"
+                android:src="@drawable/user"
+                android:tint="@color/colorUserPlaceholderIcon"
+                app:riv_border_color="@color/colorUserBorder"
+                app:riv_border_width="3dp"
+                app:riv_corner_radius="100dp"
+                app:riv_mutate_background="true"
+                app:riv_oval="true" />
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_emp_code"
+                style="@style/myTextInputLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_text_emp_code"
+                    style="@style/myEditText"
+                    android:hint="Employee Code"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLength="25" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_username"
+                style="@style/myTextInputLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_text_username"
+                    style="@style/myEditText"
+                    android:hint="Username"
+                    android:imeOptions="actionNext"
+                    android:inputType="text"
+                    android:maxLength="25" />
+            </android.support.design.widget.TextInputLayout>
+            <android.support.design.widget.TextInputLayout
+                android:id="@+id/input_layout_password"
+                style="@style/myTextInputLayout">
+
+                <android.support.design.widget.TextInputEditText
+                    android:id="@+id/edit_text_password"
+                    style="@style/myEditText"
+                    android:hint="Password"
+                    android:imeOptions="actionDone"
+                    android:inputType="textPassword"
+                    android:maxLength="25" />
+            </android.support.design.widget.TextInputLayout>
+            <Button
+                android:id="@+id/button_signup"
+                style="@style/simpleButton"
+                android:layout_marginTop="@dimen/spacing_large"
+                android:text="Sign up" />
+        </LinearLayout>
+    </ScrollView>
+
+
+
+
+</LinearLayout>
+
