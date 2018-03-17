@@ -68,7 +68,7 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
                     bitmap.getHeight(), matrix, true);
             mHolder.profileImage.setImageBitmap(rotatedBitmap);
         }catch (Exception e){
-            mHolder.profileImage.setImageResource(R.drawable.user);
+            mHolder.profileImage.setImageResource(R.mipmap.user);
         }
         mHolder.empCodeText.setText(mUser.employee_code);
         mHolder.usernameText.setText(mUser.username);

@@ -9,6 +9,7 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 
 import com.jahangir.fyp.dialog.SimpleDialog;
 import com.jahangir.fyp.fragments.AdminHomeFragment;
@@ -45,6 +46,8 @@ public class FrameActivity extends AppCompatActivity implements ToolbarListener 
                 addFragment(new LoginFragment());
             }
         }
+        getWindow().setSoftInputMode(
+                WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 
     }
     public void addFragment(final Fragment fragment) {
@@ -128,6 +131,9 @@ public class FrameActivity extends AppCompatActivity implements ToolbarListener 
     public void setTitle(String title, boolean isHome) {
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle(title);
+            if(title.equals("Login")){
+                mToolbar.setVisibility(View.GONE);
+            }
             if (isHome) {
                 getSupportActionBar().setDisplayHomeAsUpEnabled(false);
                 ActivityUtils.centerToolbarTitle(mToolbar,false);

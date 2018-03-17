@@ -20,7 +20,7 @@
                 android:layout_marginTop="@dimen/spacing_medium"
                 android:contentDescription=""
                 android:scaleType="centerCrop"
-                android:src="@drawable/user"
+                android:src="@mipmap/user"
                 android:tint="@color/colorUserPlaceholderIcon"
                 app:riv_border_color="@color/colorUserBorder"
                 app:riv_border_width="3dp"

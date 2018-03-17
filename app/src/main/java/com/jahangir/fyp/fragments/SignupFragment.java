@@ -77,7 +77,7 @@ public class SignupFragment extends Fragment implements View.OnClickListener {
                 Signup();
                 break;
             case R.id.image_user:
-                mHolder.userImage.setImageResource(R.drawable.user);
+                mHolder.userImage.setImageResource(R.mipmap.user);
                 handleCamera();
                 break;
         }
