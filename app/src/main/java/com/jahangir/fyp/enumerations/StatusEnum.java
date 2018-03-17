@@ -6,9 +6,9 @@ package com.jahangir.fyp.enumerations;
 
 public enum StatusEnum {
     EMERGENCY("Emergency"),
-    CHECKIN("Checkin"),
-    CHECKOUT("Checkout"),
-    RESPONSE("Responded"),
+    CHECKIN("Job Start"),
+    CHECKOUT("Job End"),
+    RESPONSE("Location"),
     NO_RESPONSE("Not Responded");
 
     private String name;

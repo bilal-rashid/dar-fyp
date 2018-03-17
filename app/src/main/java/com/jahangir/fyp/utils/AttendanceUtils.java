@@ -12,10 +12,10 @@ import com.jahangir.fyp.models.Packet;
 
 public class AttendanceUtils {
     public static String getCheckinKey(){
-        return Constants.CHECKIN+AppUtils.getDate();
+        return Constants.CHECKIN;
     }
     public static String getCheckoutKey(){
-        return Constants.CHECKOUT+AppUtils.getDate();
+        return Constants.CHECKIN;
     }
     public static void checkinGuard(Context context){
         PrefUtils.persistBoolean(context,getCheckinKey(),true);
@@ -24,7 +24,7 @@ public class AttendanceUtils {
         return  PrefUtils.getBoolean(context,getCheckinKey(),false);
     }
     public static void checkoutGuard(Context context){
-        PrefUtils.persistBoolean(context,getCheckoutKey(),true);
+        PrefUtils.persistBoolean(context,getCheckoutKey(),false);
     }
     public static boolean isGuardCheckout(Context context){
         return  PrefUtils.getBoolean(context,getCheckoutKey(),false);
