@@ -67,7 +67,7 @@
 
                 <data
                     android:host="*"
-                    android:port="6635"
+                    android:port="6696"
                     android:scheme="sms" />
             </intent-filter>
         </receiver>

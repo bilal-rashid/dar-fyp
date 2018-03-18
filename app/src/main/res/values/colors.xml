@@ -10,7 +10,7 @@
     <color name="colorWhite">#ffffff</color>
     <color name="colorWhitetransparent">#00546e7a</color>
     <color name="colorDividerLine">@color/colorMain</color>
-    <color name="colorprimaryTransparent">#9d29434e</color>
+    <color name="colorprimaryTransparent">#8629434e</color>
     <color name="colorCardTransparent">#89ffffff</color>
     <color name="colorCardTransparentPressed">#5cffffff</color>
     <!--Tabs-->
@@ -164,8 +164,8 @@
     <color name="colorToolbarIcon">@color/colorToolBarText</color>
 
     <!-- Overlay -->
-    <color name="card_logout_color">#FF8A65</color>
-    <color name="card_logout_color_pressed">#c75b39</color>
+    <color name="card_logout_color">#91ff8a65</color>
+    <color name="card_logout_color_pressed">#41ff8a65</color>
     <color name="bright_overlay">#21ffffff</color>
     <color name="card_expense_color">#ff7043</color>
     <color name="card_expense_color_pressed">#b61827</color>
@@ -173,12 +173,12 @@
     <color name="card_income_color_pressed">@color/colorPrimaryDark</color>
     <color name="card_saving_color">#EF9A9A</color>
     <color name="card_saving_color_pressed">#ba6b6c</color>
-    <color name="card_alarm_color">#EF5350</color>
-    <color name="card_alarm_color_pressed">#b61827</color>
-    <color name="card_checkin_color">#90caf9</color>
-    <color name="card_checkin_color_pressed">#5d99c6</color>
-    <color name="card_checkout_color">#009688</color>
-    <color name="card_checkout_color_pressed">#00675b</color>
+    <color name="card_alarm_color">#92ef5350</color>
+    <color name="card_alarm_color_pressed">#43ef5350</color>
+    <color name="card_checkin_color">#920097a7</color>
+    <color name="card_checkin_color_pressed">#410097a7</color>
+    <color name="card_checkout_color">#92009688</color>
+    <color name="card_checkout_color_pressed">#40009688</color>
     <color name="card_purchase_color">#CE93D8</color>
     <color name="card_purchase_color_pressed">#9c64a6</color>
     <color name="card_setting_color">#FF8A65</color>
@@ -189,9 +189,9 @@
     <color name="colorPrimary_transparent">#875cc5f4</color>
 
 
-    <color name="color_responded">#a5d6a7</color>
+    <color name="color_responded">#6a546e7a</color>
     <color name="color_not_responded">#f5754d</color>
-    <color name="color_checkout">#ffee58</color>
-    <color name="color_checkin">#9fa8da</color>
-    <color name="color_emergency">#ff5722</color>
+    <color name="color_checkout">#690097a7</color>
+    <color name="color_checkin">#694caf50</color>
+    <color name="color_emergency">#71ff5722</color>
 </resources>

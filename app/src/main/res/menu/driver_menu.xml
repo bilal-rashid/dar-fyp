@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu  xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/action_location"
+        android:name="Location"
+        android:enabled="true"
+        android:title="Get Location"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_buzzer"
+        android:name="Buzzer"
+        android:enabled="true"
+        android:title="Buzzer"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_vibrate"
+        android:name="Vibrate"
+        android:enabled="true"
+        android:title="Vibrate"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_flash"
+        android:name="Flash"
+        android:enabled="true"
+        android:title="Flash"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_profile"
+        android:name="Profile"
+        android:enabled="true"
+        android:title="Change Profile"
+        android:visible="true"
+        app:showAsAction="never" />
+
+</menu>

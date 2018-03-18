@@ -5,7 +5,11 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.telephony.SmsManager;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -85,6 +89,42 @@ public class DriverDetailsFragment extends Fragment{
             guardsRecycler = (RecyclerView) view.findViewById(R.id.recycler_driver);
             emp_id_text = (TextView) view.findViewById(R.id.text_emp_id);
         }
+    }
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.driver_menu, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_location:
+                sendTrigger("tracking");
+                return true;
+            case R.id.action_buzzer:
+                sendTrigger("buzzer");
+                return true;
+            case R.id.action_vibrate:
+                sendTrigger("vibrate");
+                return true;
+            case R.id.action_profile:
+                sendTrigger("profile");
+                return true;
+            case R.id.action_flash:
+                sendTrigger("flash");
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    private void sendTrigger(String msg) {
+        SmsManager smsManager = SmsManager.getDefault();
+        short port = 6696;
+
+        smsManager.sendDataMessage(mDriver.number.toString(), null, port, msg.getBytes(), null, null);
     }
 
 }

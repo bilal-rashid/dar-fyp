@@ -5,6 +5,7 @@
     android:layout_height="wrap_content"
     android:layout_marginTop="@dimen/spacing_medium"
     android:layout_marginStart="@dimen/spacing_medium"
+    app:cardBackgroundColor="@color/colorWhitetransparent"
     android:layout_marginEnd="@dimen/spacing_medium"
     app:cardCornerRadius="@dimen/spacing_medium">
 
