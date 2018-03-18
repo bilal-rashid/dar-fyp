@@ -27,6 +27,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_small"
             android:layout_marginEnd="@dimen/spacing_small"
+            app:cardBackgroundColor="@color/colorprimaryTransparent"
             app:cardCornerRadius="@dimen/spacing_medium">
 
             <LinearLayout
@@ -43,7 +44,6 @@
                         style="@style/myEditText"
                         android:drawableLeft="@drawable/ic_user_name"
                         android:drawablePadding="@dimen/spacing_small"
-                        android:drawableTint="@color/colorPrimaryDark"
                         android:hint="Username"
                         android:imeOptions="actionNext"
                         android:inputType="text"
@@ -60,7 +60,6 @@
                         style="@style/myEditText"
                         android:drawableLeft="@drawable/ic_password"
                         android:drawablePadding="@dimen/spacing_small"
-                        android:drawableTint="@color/colorPrimaryDark"
                         android:hint="Password"
                         android:imeOptions="actionDone"
                         android:inputType="textPassword" />

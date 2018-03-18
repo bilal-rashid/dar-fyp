@@ -2,14 +2,20 @@ package com.jahangir.fyp.fragments;
 
 import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
+import android.location.Location;
+import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Looper;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,6 +24,12 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.LocationSettingsRequest;
+import com.google.android.gms.location.SettingsClient;
 import com.jahangir.fyp.FrameActivity;
 import com.jahangir.fyp.R;
 import com.jahangir.fyp.dialog.SimpleDialog;
@@ -39,6 +51,10 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
     private static final int MY_SMS_REQ_CODE_EMERGENCY= 3;
     private static final int MY_SMS_REQ_CODE_CHECKIN= 4;
     private static final int MY_SMS_REQ_CODE_CHECKOUT= 5;
+    private LocationRequest mLocationRequest;
+
+    private long UPDATE_INTERVAL = 1000;  /* 1 sec */
+    private long FASTEST_INTERVAL = 500; /* 1/2 sec */
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +112,7 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
     }
     @Override
     public void onClick(View view) {
+        final LocationManager manager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
         switch (view.getId()){
             case R.id.card_logout:
                 mSimpleDialog = new SimpleDialog(getContext(), null, getString(R.string.msg_logout),
@@ -117,94 +134,126 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
                 mSimpleDialog.show();
                 break;
             case R.id.card_alarm:
-                mSimpleDialog = new SimpleDialog(getContext(), null, getString(R.string.msg_alarm),
-                        getString(R.string.button_cancel), getString(R.string.button_ok), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switch (view.getId()) {
-                            case R.id.button_positive:
-                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-                                    mSimpleDialog.dismiss();
-                                    requestPermissions(
-                                            new String[]{Manifest.permission.SEND_SMS},
-                                            MY_SMS_REQ_CODE_EMERGENCY);
-                                }else {
-                                    AttendanceUtils.sendEmergency(getContext());
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    buildAlertMessageNoGps();
+                }else {
+                    mSimpleDialog = new SimpleDialog(getContext(), null, getString(R.string.msg_alarm),
+                            getString(R.string.button_cancel), getString(R.string.button_ok), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            switch (view.getId()) {
+                                case R.id.button_positive:
+                                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        mSimpleDialog.dismiss();
+                                        requestPermissions(
+                                                new String[]{Manifest.permission.SEND_SMS},
+                                                MY_SMS_REQ_CODE_EMERGENCY);
+                                    } else {
+                                        startLocationUpdates(3);
+                                        mSimpleDialog.dismiss();
+                                        break;
+                                    }
+
+                                case R.id.button_negative:
                                     mSimpleDialog.dismiss();
                                     break;
-                                }
-
-                            case R.id.button_negative:
-                                mSimpleDialog.dismiss();
-                                break;
+                            }
                         }
-                    }
-                });
-                mSimpleDialog.show();
+                    });
+                    mSimpleDialog.show();
+                }
                 break;
             case R.id.card_checkin:
-                mSimpleDialog = new SimpleDialog(getContext(), null, getString(R.string.msg_checkin),
-                        getString(R.string.button_cancel), getString(R.string.button_ok), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switch (view.getId()) {
-                            case R.id.button_positive:
-                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    buildAlertMessageNoGps();
+                }
+                else {
+                    mSimpleDialog = new SimpleDialog(getContext(), null, getString(R.string.msg_checkin),
+                            getString(R.string.button_cancel), getString(R.string.button_ok), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            switch (view.getId()) {
+                                case R.id.button_positive:
+                                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        mSimpleDialog.dismiss();
+                                        requestPermissions(
+                                                new String[]{Manifest.permission.SEND_SMS},
+                                                MY_SMS_REQ_CODE_CHECKIN);
+                                    } else {
+                                        mHolder.checkinCard.setEnabled(false);
+                                        mHolder.checkinCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
+                                        mHolder.checkoutCard.setEnabled(true);
+                                        mHolder.checkoutCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_checkout_color));
+                                        AttendanceUtils.checkinGuard(getContext());
+                                        startLocationUpdates(1);
+                                        AppUtils.startPulse(getContext());
+                                        mSimpleDialog.dismiss();
+                                    }
+                                    break;
+                                case R.id.button_negative:
                                     mSimpleDialog.dismiss();
-                                    requestPermissions(
-                                            new String[]{Manifest.permission.SEND_SMS},
-                                            MY_SMS_REQ_CODE_CHECKIN);
-                                }else {
-                                    mHolder.checkinCard.setEnabled(false);
-                                    mHolder.checkinCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
-                                    mHolder.checkoutCard.setEnabled(true);
-                                    mHolder.checkoutCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_checkout_color));
-                                    AttendanceUtils.checkinGuard(getContext());
-                                    AttendanceUtils.sendCheckin(getContext());
-                                    AppUtils.startPulse(getContext());
-                                    mSimpleDialog.dismiss();
-                                }
-                                break;
-                            case R.id.button_negative:
-                                mSimpleDialog.dismiss();
-                                break;
+                                    break;
+                            }
                         }
-                    }
-                });
-                mSimpleDialog.show();
+                    });
+                    mSimpleDialog.show();
+                }
                 break;
             case R.id.card_checkout:
-                mSimpleDialog = new SimpleDialog(getContext(), null, getString(R.string.msg_checkout),
-                        getString(R.string.button_cancel), getString(R.string.button_ok), new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        switch (view.getId()) {
-                            case R.id.button_positive:
-                                if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                if (!manager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
+                    buildAlertMessageNoGps();
+                }
+                else {
+                    mSimpleDialog = new SimpleDialog(getContext(), null, getString(R.string.msg_checkout),
+                            getString(R.string.button_cancel), getString(R.string.button_ok), new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            switch (view.getId()) {
+                                case R.id.button_positive:
+                                    if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
+                                        mSimpleDialog.dismiss();
+                                        requestPermissions(
+                                                new String[]{Manifest.permission.SEND_SMS},
+                                                MY_SMS_REQ_CODE_CHECKOUT);
+                                    } else {
+                                        mHolder.checkoutCard.setEnabled(false);
+                                        mHolder.checkoutCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
+                                        mHolder.checkinCard.setEnabled(true);
+                                        mHolder.checkinCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_checkin_color));
+                                        AttendanceUtils.checkoutGuard(getContext());
+                                        startLocationUpdates(2);
+                                        AppUtils.stopPulse(getContext());
+                                        mSimpleDialog.dismiss();
+                                    }
+                                    break;
+                                case R.id.button_negative:
                                     mSimpleDialog.dismiss();
-                                    requestPermissions(
-                                            new String[]{Manifest.permission.SEND_SMS},
-                                            MY_SMS_REQ_CODE_CHECKOUT);
-                                }else {
-                                    mHolder.checkoutCard.setEnabled(false);
-                                    mHolder.checkoutCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
-                                    mHolder.checkinCard.setEnabled(true);
-                                    mHolder.checkinCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.card_checkin_color));
-                                    AttendanceUtils.checkoutGuard(getContext());
-                                    AttendanceUtils.sendCheckout(getContext());
-                                    AppUtils.stopPulse(getContext());
-                                    mSimpleDialog.dismiss();
-                                }
-                                break;
-                            case R.id.button_negative:
-                                mSimpleDialog.dismiss();
-                                break;
+                                    break;
+                            }
                         }
-                    }
-                });
-                mSimpleDialog.show();
+                    });
+                    mSimpleDialog.show();
+                }
                 break;
         }
+    }
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        builder.setMessage("Your GPS seems to be disabled, please enable it to proceed")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 
     @Override
@@ -247,6 +296,59 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
 
         }
     }
+    public void onLocationChanged(Location location,int status) {
+        // New location has now been determined
+        counter = 0;
+        String loc = Double.toString(location.getLatitude()) + "_" +
+                Double.toString(location.getLongitude());
+        if(status == 1){
+            AttendanceUtils.sendCheckin(getContext(),loc);
+        }else if (status == 2) {
+            AttendanceUtils.sendCheckout(getContext(),loc);
+        }else {
+            AttendanceUtils.sendEmergency(getContext(),loc);
+        }
+
+
+    }
+
+    public static int counter = 0;
+    protected void startLocationUpdates(final int status) {
+
+        // Create the location request to start receiving updates
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+        mLocationRequest.setInterval(UPDATE_INTERVAL);
+        mLocationRequest.setFastestInterval(FASTEST_INTERVAL);
+
+        // Create LocationSettingsRequest object using location request
+        LocationSettingsRequest.Builder builder = new LocationSettingsRequest.Builder();
+        builder.addLocationRequest(mLocationRequest);
+        final LocationSettingsRequest locationSettingsRequest = builder.build();
+
+        // Check whether location settings are satisfied
+        // https://developers.google.com/android/reference/com/google/android/gms/location/SettingsClient
+        SettingsClient settingsClient = LocationServices.getSettingsClient(getActivity());
+        settingsClient.checkLocationSettings(locationSettingsRequest);
+
+        // new Google API SDK v11 uses getFusedLocationProviderClient(this)
+        if (ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(getContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            return;
+        }
+        LocationServices.getFusedLocationProviderClient(getActivity()).requestLocationUpdates(mLocationRequest, new LocationCallback() {
+                    @Override
+                    public void onLocationResult(LocationResult locationResult) {
+                        // do work here
+                        counter++;
+                        if(counter > 1) {
+                            onLocationChanged(locationResult.getLastLocation(),status);
+                            LocationServices.getFusedLocationProviderClient(getActivity()).removeLocationUpdates(this);
+                        }
+                    }
+                },
+                Looper.myLooper());
+    }
 
     public static class ViewHolder {
         ImageView profileImage;
@@ -274,7 +376,7 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
                     mHolder.checkinCard.setEnabled(false);
                     mHolder.checkinCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
                     AttendanceUtils.checkinGuard(getContext());
-                    AttendanceUtils.sendCheckin(getContext());
+                    startLocationUpdates(1);
                     AppUtils.startPulse(getContext());
                 } else {
                     // permission denied, boo! Disable the
@@ -290,7 +392,7 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
                     mHolder.checkoutCard.setEnabled(false);
                     mHolder.checkoutCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
                     AttendanceUtils.checkoutGuard(getContext());
-                    AttendanceUtils.sendCheckout(getContext());
+                    startLocationUpdates(2);
                     AppUtils.stopPulse(getContext());
                 } else {
                     // permission denied, boo! Disable the
@@ -303,7 +405,7 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    AttendanceUtils.sendEmergency(getContext());
+                    startLocationUpdates(3);
                 } else {
                     // permission denied, boo! Disable the
                     // functionality that depends on this permission.

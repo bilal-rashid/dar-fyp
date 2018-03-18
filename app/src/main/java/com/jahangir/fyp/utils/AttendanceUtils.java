@@ -29,19 +29,24 @@ public class AttendanceUtils {
     public static boolean isGuardCheckout(Context context){
         return  PrefUtils.getBoolean(context,getCheckoutKey(),false);
     }
-    public static void sendCheckin(Context context){
-        Packet packet = new Packet(LoginUtils.getUser(context).username+"-"+LoginUtils.getUser(context).employee_code,
-                StatusEnum.CHECKIN.getName(),AppUtils.getDateAndTime());
+    public static void sendCheckin(Context context,String location){
+        Packet packet = new Packet(LoginUtils.getUser(context).employee_code,
+                StatusEnum.CHECKIN.getName(),AppUtils.getDateAndTime(),location);
         AppUtils.sendSMS(context.getString(R.string.admin_number), GsonUtils.toJson(packet));
     }
-    public static void sendCheckout(Context context){
-        Packet packet = new Packet(LoginUtils.getUser(context).username+"-"+LoginUtils.getUser(context).employee_code,
-                StatusEnum.CHECKOUT.getName(),AppUtils.getDateAndTime());
+    public static void sendCheckout(Context context,String location){
+        Packet packet = new Packet(LoginUtils.getUser(context).employee_code,
+                StatusEnum.CHECKOUT.getName(),AppUtils.getDateAndTime(),location);
         AppUtils.sendSMS(context.getString(R.string.admin_number), GsonUtils.toJson(packet));
     }
-    public static void sendEmergency(Context context){
-        Packet packet = new Packet(LoginUtils.getUser(context).username+"-"+LoginUtils.getUser(context).employee_code,
-                StatusEnum.EMERGENCY.getName(),AppUtils.getDateAndTime());
+    public static void sendEmergency(Context context,String location){
+        Packet packet = new Packet(LoginUtils.getUser(context).employee_code,
+                StatusEnum.EMERGENCY.getName(),AppUtils.getDateAndTime(),location);
+        AppUtils.sendSMS(context.getString(R.string.admin_number), GsonUtils.toJson(packet));
+    }
+    public static void sendLocation(Context context,String location){
+        Packet packet = new Packet(LoginUtils.getUser(context).employee_code,
+                StatusEnum.RESPONSE.getName(),AppUtils.getDateAndTime(),location);
         AppUtils.sendSMS(context.getString(R.string.admin_number), GsonUtils.toJson(packet));
     }
     public static void sendResponded(Context context){
