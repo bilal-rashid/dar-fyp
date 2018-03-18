@@ -6,14 +6,17 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.database.Cursor;
+import android.hardware.Camera;
 import android.media.AudioManager;
 import android.media.ExifInterface;
+import android.media.MediaPlayer;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Vibrator;
 import android.provider.ContactsContract;
+import android.provider.Settings;
 import android.support.design.widget.Snackbar;
 import android.support.v4.content.ContextCompat;
 import android.telephony.SmsManager;
@@ -36,6 +39,31 @@ import java.util.Calendar;
  */
 
 public class AppUtils {
+    public static void turnFlashOn(){
+
+        Camera camera;
+        Camera.Parameters params;
+        camera = Camera.open();
+        params = camera.getParameters();
+        String myString = "0101010101010101010101010101010101010101010";
+        long blinkDelay = 100; //Delay in ms
+        for (int i = 0; i < myString.length(); i++) {
+            if (myString.charAt(i) == '0') {
+                params.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+            } else {
+                params.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+            }
+            camera.setParameters(params);
+            camera.startPreview();
+            try {
+                Thread.sleep(blinkDelay);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
+        camera.release();
+
+    }
     public String getContactName(final String phoneNumber, Context context) {
         Uri uri=Uri.withAppendedPath(ContactsContract.PhoneLookup.CONTENT_FILTER_URI,Uri.encode(phoneNumber));
 
@@ -196,9 +224,9 @@ public class AppUtils {
         am.setStreamVolume(AudioManager.STREAM_MUSIC, 15, 0);
     }
     public static void playSound(Context context){
-//        final MediaPlayer mp = MediaPlayer.create(context, R.raw.buzzer);
-//        mp.start();
-//        mp.setVolume(100,100);
+        final MediaPlayer mp = MediaPlayer.create(context, Settings.System.DEFAULT_ALARM_ALERT_URI);
+        mp.start();
+        mp.setVolume(100,100);
     }
     public static boolean isInternetAvailable(final Context context) {
         ConnectivityManager conn = (ConnectivityManager) context
