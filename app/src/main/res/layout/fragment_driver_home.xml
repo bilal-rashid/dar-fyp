@@ -93,7 +93,7 @@
                     <TextView
                         android:textColor="@color/colorSpinnerBG"
                         android:textSize="@dimen/app_title"
-                        android:text="CheckIn"
+                        android:text="Start Job"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="right"
@@ -124,7 +124,7 @@
                     <TextView
                         android:textColor="@color/colorSpinnerBG"
                         android:textSize="@dimen/app_title"
-                        android:text="Checkout"
+                        android:text="End Job"
                         android:layout_width="0dp"
                         android:layout_weight="1"
                         android:gravity="right"

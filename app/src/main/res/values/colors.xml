@@ -11,6 +11,8 @@
     <color name="colorWhitetransparent">#00546e7a</color>
     <color name="colorDividerLine">@color/colorMain</color>
     <color name="colorprimaryTransparent">#9d29434e</color>
+    <color name="colorCardTransparent">#89ffffff</color>
+    <color name="colorCardTransparentPressed">#5cffffff</color>
     <!--Tabs-->
     <color name="colorTabs">#bababa</color>
     <color name="colorTabsText">#000000</color>

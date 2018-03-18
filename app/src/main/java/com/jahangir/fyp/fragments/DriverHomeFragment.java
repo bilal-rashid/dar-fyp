@@ -44,7 +44,7 @@ import com.jahangir.fyp.utils.LoginUtils;
  * Created by Bilal Rashid on 1/20/2018.
  */
 
-public class GuardHomeFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
+public class DriverHomeFragment extends Fragment implements View.OnClickListener, View.OnTouchListener {
     private ViewHolder mHolder;
     private User mUser;
     private SimpleDialog mSimpleDialog;
@@ -64,12 +64,12 @@ public class GuardHomeFragment extends Fragment implements View.OnClickListener,
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ToolbarListener) {
-            ((ToolbarListener) context).setTitle("Guard",true);
+            ((ToolbarListener) context).setTitle("Driver",true);
         }
     }
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_guard_home, container, false);
+        return inflater.inflate(R.layout.fragment_driver_home, container, false);
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {

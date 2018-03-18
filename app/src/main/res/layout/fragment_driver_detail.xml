@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorAppBG"
+    android:background="@drawable/background"
     android:orientation="vertical">
     <TextView
         android:id="@+id/text_emp_id"
@@ -15,7 +15,7 @@
         android:textSize="@dimen/app_title"
         android:text="Guard101"/>
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/recycler_guards"
+        android:id="@+id/recycler_driver"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:fastScrollEnabled="true"

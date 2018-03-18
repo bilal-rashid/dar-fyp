@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/colorAppBG"
+    android:background="@drawable/background"
     android:orientation="vertical">
 
     <include layout="@layout/error" />
@@ -10,7 +10,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.v7.widget.RecyclerView
-            android:id="@+id/recycler_guards"
+            android:id="@+id/recycler_driver"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:overScrollMode="never"

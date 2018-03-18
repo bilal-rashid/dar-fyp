@@ -14,7 +14,7 @@ import android.view.WindowManager;
 import com.jahangir.fyp.dialog.SimpleDialog;
 import com.jahangir.fyp.fragments.AdminHomeFragment;
 import com.jahangir.fyp.fragments.AlarmFragment;
-import com.jahangir.fyp.fragments.GuardHomeFragment;
+import com.jahangir.fyp.fragments.DriverHomeFragment;
 import com.jahangir.fyp.fragments.LoginFragment;
 import com.jahangir.fyp.toolbox.ToolbarListener;
 import com.jahangir.fyp.utils.ActivityUtils;
@@ -41,7 +41,7 @@ public class FrameActivity extends AppCompatActivity implements ToolbarListener 
             if(LoginUtils.isAdminUserLogin(this)){
                 addFragment(new AdminHomeFragment());
             }else if (LoginUtils.isGuardUserLogin(this)){
-                addFragment(new GuardHomeFragment());
+                addFragment(new DriverHomeFragment());
             }else {
                 addFragment(new LoginFragment());
             }

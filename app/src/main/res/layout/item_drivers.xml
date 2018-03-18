@@ -6,6 +6,7 @@
     android:layout_marginLeft="@dimen/spacing_small"
     android:layout_marginRight="@dimen/spacing_small"
     android:layout_marginTop="@dimen/spacing_small"
+    app:cardBackgroundColor="@color/colorWhitetransparent"
     app:cardCornerRadius="@dimen/spacing_small">
 
     <LinearLayout
@@ -35,6 +36,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:clickable="true"
+            android:background="@color/colorCardTransparent"
             android:orientation="vertical">
 
             <TextView

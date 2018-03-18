@@ -6,7 +6,7 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.util.Log;
 
-import com.jahangir.fyp.models.Guard;
+import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.models.Packet;
 
 import java.text.ParseException;
@@ -22,9 +22,9 @@ import java.util.List;
  */
 
 public class SmsUtils {
-    public static List<Guard> getAllGuards(Context context) {
+    public static List<Driver> getAllGuards(Context context) {
         HashMap<String, String> hashMap = new HashMap<>();
-        List<Guard> guardList = new ArrayList<>();
+        List<Driver> driverList = new ArrayList<>();
         final String SMS_URI_INBOX = "content://sms/inbox";
         final String SMS_URI_ALL = "content://sms/";
         try {
@@ -54,10 +54,10 @@ public class SmsUtils {
         }
         if (hashMap.size() > 0) {
             for (int i = 0; i < hashMap.size(); i++) {
-                guardList.add(new Guard(hashMap.keySet().toArray()[i] + "", hashMap.values().toArray()[i] + ""));
+                driverList.add(new Driver(hashMap.keySet().toArray()[i] + "", hashMap.values().toArray()[i] + ""));
             }
         }
-        return guardList;
+        return driverList;
     }
 
     public static List<Packet> getGuardPackets(Context context, String number) {
@@ -131,12 +131,12 @@ public class SmsUtils {
     }
     public static List<Packet> getAllPackets(Context context, boolean lastweek){
         List<Packet> packetList = new ArrayList<>();
-        List<Guard> guardList = getAllGuards(context);
-        for(int i=0;i<guardList.size();i++){
+        List<Driver> driverList = getAllGuards(context);
+        for(int i = 0; i< driverList.size(); i++){
             if(lastweek)
-                packetList.addAll(getLastWeekGuardPackets(context,guardList.get(i).number));
+                packetList.addAll(getLastWeekGuardPackets(context, driverList.get(i).number));
             else
-                packetList.addAll(getGuardPackets(context,guardList.get(i).number));
+                packetList.addAll(getGuardPackets(context, driverList.get(i).number));
         }
         return packetList;
     }

@@ -12,7 +12,7 @@ import android.widget.TextView;
 
 import com.jahangir.fyp.R;
 import com.jahangir.fyp.adapters.PacketsAdapter;
-import com.jahangir.fyp.models.Guard;
+import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.models.Packet;
 import com.jahangir.fyp.toolbox.ToolbarListener;
 import com.jahangir.fyp.utils.Constants;
@@ -25,10 +25,10 @@ import java.util.List;
  * Created by Bilal Rashid on 1/28/2018.
  */
 
-public class GuardDetailsFragment extends Fragment{
+public class DriverDetailsFragment extends Fragment{
 
     private ViewHolder mHolder;
-    private Guard mGuard;
+    private Driver mDriver;
     private List<Packet> mPacketList;
     private PacketsAdapter mPacketsAdapter;
     @Override
@@ -40,19 +40,19 @@ public class GuardDetailsFragment extends Fragment{
     public void onAttach(Context context) {
         super.onAttach(context);
         if (context instanceof ToolbarListener) {
-            ((ToolbarListener) context).setTitle("Attendance",false);
+            ((ToolbarListener) context).setTitle("Driver Details",false);
         }
     }
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_guard_detail, container, false);
+        return inflater.inflate(R.layout.fragment_driver_detail, container, false);
     }
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         mHolder = new ViewHolder(view);
         manipulateBundle();
-        mPacketList = SmsUtils.getGuardPackets(getContext(),mGuard.number);
-        mHolder.emp_id_text.setText(mGuard.emp_id);
+        mPacketList = SmsUtils.getGuardPackets(getContext(), mDriver.number);
+        mHolder.emp_id_text.setText(mDriver.emp_id);
         if(mPacketList.size() > 0){
             setupRecyclerView();
             populateData(mPacketList);
@@ -63,7 +63,7 @@ public class GuardDetailsFragment extends Fragment{
 
     private void manipulateBundle() {
         if (getArguments() != null) {
-            mGuard = GsonUtils.fromJson(getArguments().getString(Constants.GUARD_DATA),Guard.class);
+            mDriver = GsonUtils.fromJson(getArguments().getString(Constants.GUARD_DATA),Driver.class);
         }
     }
     private void setupRecyclerView() {
@@ -82,7 +82,7 @@ public class GuardDetailsFragment extends Fragment{
         TextView emp_id_text;
 
         public ViewHolder(View view) {
-            guardsRecycler = (RecyclerView) view.findViewById(R.id.recycler_guards);
+            guardsRecycler = (RecyclerView) view.findViewById(R.id.recycler_driver);
             emp_id_text = (TextView) view.findViewById(R.id.text_emp_id);
         }
     }

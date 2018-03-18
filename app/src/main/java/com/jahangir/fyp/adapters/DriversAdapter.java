@@ -9,7 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.jahangir.fyp.R;
-import com.jahangir.fyp.models.Guard;
+import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.toolbox.OnItemClickListener;
 
 import java.util.ArrayList;
@@ -19,11 +19,11 @@ import java.util.List;
  * Created by Bilal Rashid on 1/27/2018.
  */
 
-public class GuardAdapter extends RecyclerView.Adapter<GuardAdapter.ViewHolder> {
-    private List<Guard> mItems = new ArrayList<>();
+public class DriversAdapter extends RecyclerView.Adapter<DriversAdapter.ViewHolder> {
+    private List<Driver> mItems = new ArrayList<>();
     OnItemClickListener mItemclickListener;
 
-    public GuardAdapter(OnItemClickListener onItemClickListener){
+    public DriversAdapter(OnItemClickListener onItemClickListener){
         this.mItemclickListener = onItemClickListener;
 
     }
@@ -31,7 +31,7 @@ public class GuardAdapter extends RecyclerView.Adapter<GuardAdapter.ViewHolder> 
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         return new ViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_guards, parent, false)) {
+                .inflate(R.layout.item_drivers, parent, false)) {
         };
     }
 
@@ -51,17 +51,17 @@ public class GuardAdapter extends RecyclerView.Adapter<GuardAdapter.ViewHolder> 
                 switch (motionEvent.getAction()) {
 
                     case MotionEvent.ACTION_UP:
-                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorWhite));
+                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorCardTransparent));
                         mItemclickListener.onItemClick(view,mItems.get(position),position);
                         break;
                     case MotionEvent.ACTION_CANCEL:
-                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorWhite));
+                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorCardTransparent));
                         break;
                     case MotionEvent.ACTION_DOWN:
-                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorWhite));
+                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorCardTransparent));
                         break;
                     case MotionEvent.ACTION_MOVE:
-                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorAppBG));
+                        view.setBackgroundColor(view.getContext().getResources().getColor(R.color.colorCardTransparentPressed));
                         break;
 
                 }
@@ -75,7 +75,7 @@ public class GuardAdapter extends RecyclerView.Adapter<GuardAdapter.ViewHolder> 
     public int getItemCount() {
         return (mItems != null ? mItems.size() : 0);
     }
-    public void addAll(List<Guard> collection) {
+    public void addAll(List<Driver> collection) {
         mItems.clear();
         if (collection != null)
             mItems.addAll(collection);

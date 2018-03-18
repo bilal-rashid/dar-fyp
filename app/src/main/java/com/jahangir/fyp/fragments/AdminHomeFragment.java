@@ -20,11 +20,11 @@ import android.widget.ProgressBar;
 
 import com.jahangir.fyp.FrameActivity;
 import com.jahangir.fyp.R;
-import com.jahangir.fyp.adapters.GuardAdapter;
+import com.jahangir.fyp.adapters.DriversAdapter;
 import com.jahangir.fyp.api.ApiClient;
 import com.jahangir.fyp.api.ApiInterface;
 import com.jahangir.fyp.dialog.SimpleDialog;
-import com.jahangir.fyp.models.Guard;
+import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.models.Packet;
 import com.jahangir.fyp.models.ResponseModel;
 import com.jahangir.fyp.toolbox.OnItemClickListener;
@@ -49,9 +49,9 @@ import retrofit2.Response;
 public class AdminHomeFragment extends Fragment implements View.OnClickListener, OnItemClickListener {
 
     private ViewHolder mHolder;
-    private List<Guard> mGuardList;
+    private List<Driver> mDriverList;
     private SimpleDialog mSimpleDialog;
-    private GuardAdapter mGuardAdapter;
+    private DriversAdapter mDriversAdapter;
     private Handler mHandler;
     private Runnable mRunnable = new Runnable() {
         @Override
@@ -115,10 +115,10 @@ public class AdminHomeFragment extends Fragment implements View.OnClickListener,
                     MY_WRITE_EXTERNAL_STORAGE_PERMISSION_REQUEST_CODE);
             return;
         }
-        mGuardList = SmsUtils.getAllGuards(getContext());
-        if (mGuardList.size() > 0) {
+        mDriverList = SmsUtils.getAllGuards(getContext());
+        if (mDriverList.size() > 0) {
             setupRecyclerView();
-            populateData(mGuardList);
+            populateData(mDriverList);
             mHolder.errorContainer.setVisibility(View.GONE);
         } else {
             mHolder.errorContainer.setVisibility(View.VISIBLE);
@@ -127,13 +127,13 @@ public class AdminHomeFragment extends Fragment implements View.OnClickListener,
 
     private void setupRecyclerView() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
-        mHolder.guardsRecycler.setLayoutManager(mLayoutManager);
-        mGuardAdapter = new GuardAdapter(this);
-        mHolder.guardsRecycler.setAdapter(mGuardAdapter);
+        mHolder.driversRecycler.setLayoutManager(mLayoutManager);
+        mDriversAdapter = new DriversAdapter(this);
+        mHolder.driversRecycler.setAdapter(mDriversAdapter);
     }
 
-    private void populateData(List<Guard> objects) {
-        mGuardAdapter.addAll(objects);
+    private void populateData(List<Driver> objects) {
+        mDriversAdapter.addAll(objects);
     }
 
     @Override
@@ -143,20 +143,20 @@ public class AdminHomeFragment extends Fragment implements View.OnClickListener,
 
     @Override
     public void onItemClick(View view, Object data, int position) {
-        Guard guard = (Guard) data;
+        Driver driver = (Driver) data;
         Bundle bundle = new Bundle();
-        bundle.putString(Constants.GUARD_DATA, GsonUtils.toJson(guard));
-        ActivityUtils.startActivity(getActivity(), FrameActivity.class, GuardDetailsFragment.class.getName(), bundle);
+        bundle.putString(Constants.GUARD_DATA, GsonUtils.toJson(driver));
+        ActivityUtils.startActivity(getActivity(), FrameActivity.class, DriverDetailsFragment.class.getName(), bundle);
     }
 
     public static class ViewHolder {
 
-        RecyclerView guardsRecycler;
+        RecyclerView driversRecycler;
         LinearLayout errorContainer;
         ProgressBar progressBar;
 
         public ViewHolder(View view) {
-            guardsRecycler = (RecyclerView) view.findViewById(R.id.recycler_guards);
+            driversRecycler = (RecyclerView) view.findViewById(R.id.recycler_driver);
             errorContainer = (LinearLayout) view.findViewById(R.id.error_container);
             progressBar = (ProgressBar) view.findViewById(R.id.progress);
         }

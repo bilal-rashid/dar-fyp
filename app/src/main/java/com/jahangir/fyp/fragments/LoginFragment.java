@@ -84,9 +84,9 @@ public class LoginFragment extends Fragment implements View.OnClickListener{
         }else if (LoginUtils.authenticateGuard(getContext(),mHolder.usernameEditText.getText().toString(),
                 mHolder.passwordEditText.getText().toString())){
             LoginUtils.loginGuard(getContext());
-            Toast.makeText(getContext(),"Guard Logged in",Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(),"Driver Logged in",Toast.LENGTH_SHORT).show();
             ActivityUtils.startActivity(getActivity(), FrameActivity.class,
-                    GuardHomeFragment.class.getName(), null);
+                    DriverHomeFragment.class.getName(), null);
             getActivity().finish();
         }else {
             Toast.makeText(getContext(),"Invalid username or password",Toast.LENGTH_SHORT).show();
