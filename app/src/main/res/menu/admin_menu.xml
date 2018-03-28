@@ -6,7 +6,7 @@
         android:name="Sync"
         android:enabled="true"
         android:title="Sync"
-        android:visible="true"
+        android:visible="false"
         app:showAsAction="never" />
     <item
         android:id="@+id/action_logout"

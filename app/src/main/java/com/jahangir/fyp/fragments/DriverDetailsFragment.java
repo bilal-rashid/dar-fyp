@@ -3,6 +3,7 @@ package com.jahangir.fyp.fragments;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
@@ -67,6 +68,18 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
             populateData(mPacketList);
         }else {
         }
+        mHolder.swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mHolder.swipeRefreshLayout.setRefreshing(false);
+                mPacketList = SmsUtils.getGuardPackets(getContext(), mDriver.number);
+                if(mPacketList.size() > 0){
+                    setupRecyclerView();
+                    populateData(mPacketList);
+                }else {
+                }
+            }
+        });
 
     }
 
@@ -97,10 +110,12 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
 
         RecyclerView guardsRecycler;
         TextView emp_id_text;
+        SwipeRefreshLayout swipeRefreshLayout;
 
         public ViewHolder(View view) {
             guardsRecycler = (RecyclerView) view.findViewById(R.id.recycler_driver);
             emp_id_text = (TextView) view.findViewById(R.id.text_emp_id);
+            swipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
         }
     }
     @Override
