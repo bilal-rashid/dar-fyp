@@ -6,6 +6,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.telephony.SmsManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -14,11 +15,15 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jahangir.fyp.MapsActivity;
 import com.jahangir.fyp.R;
 import com.jahangir.fyp.adapters.PacketsAdapter;
 import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.models.Packet;
+import com.jahangir.fyp.toolbox.OnItemClickListener;
 import com.jahangir.fyp.toolbox.ToolbarListener;
+import com.jahangir.fyp.utils.ActivityUtils;
+import com.jahangir.fyp.utils.AppUtils;
 import com.jahangir.fyp.utils.Constants;
 import com.jahangir.fyp.utils.GsonUtils;
 import com.jahangir.fyp.utils.SmsUtils;
@@ -29,7 +34,7 @@ import java.util.List;
  * Created by Bilal Rashid on 1/28/2018.
  */
 
-public class DriverDetailsFragment extends Fragment{
+public class DriverDetailsFragment extends Fragment implements OnItemClickListener{
 
     private ViewHolder mHolder;
     private Driver mDriver;
@@ -73,11 +78,19 @@ public class DriverDetailsFragment extends Fragment{
     private void setupRecyclerView() {
         LinearLayoutManager mLayoutManager = new LinearLayoutManager(getActivity());
         mHolder.guardsRecycler.setLayoutManager(mLayoutManager);
-        mPacketsAdapter= new PacketsAdapter();
+        mPacketsAdapter= new PacketsAdapter(this);
         mHolder.guardsRecycler.setAdapter(mPacketsAdapter);
     }
     private void populateData(List<Packet> objects) {
         mPacketsAdapter.addAll(objects);
+    }
+
+    @Override
+    public void onItemClick(View view, Object data, int position) {
+        Packet packet = (Packet) data;
+        Bundle bundle = new Bundle();
+        bundle.putString(Constants.PACKET_DATA, GsonUtils.toJson(packet));
+        ActivityUtils.startActivity(getActivity(), MapsActivity.class,bundle);
     }
 
     public static class ViewHolder {

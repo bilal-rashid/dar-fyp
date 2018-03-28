@@ -9,21 +9,42 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.jahangir.fyp.models.Packet;
+import com.jahangir.fyp.utils.Constants;
+import com.jahangir.fyp.utils.GsonUtils;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
+    private Packet mPacket;
+    double longitude,latitude;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
+        manipulateBundle();
+        try {
+            String[] separated = mPacket.point.split("_");
+            latitude = Double.parseDouble(separated[0]);
+            longitude = Double.parseDouble(separated[1]);
+        }catch (Exception e){
+            latitude = Double.parseDouble("31.5");
+            longitude = Double.parseDouble("74.3");
+        }
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        MapsActivity.this.finish();
+        overridePendingTransition(R.anim.slide_in_left, R.anim.slide_out_right);
+    }
 
     /**
      * Manipulates the map once available.
@@ -39,8 +60,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
 
         // Add a marker in Sydney and move the camera
-        LatLng sydney = new LatLng(-34, 151);
-        mMap.addMarker(new MarkerOptions().position(sydney).title("Marker in Sydney"));
+        LatLng sydney = new LatLng(latitude, longitude);
+        mMap.addMarker(new MarkerOptions().position(sydney).title(mPacket.status));
         mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+        mMap.animateCamera( CameraUpdateFactory.zoomTo( 17.0f ) );
+    }
+    private void manipulateBundle() {
+        Bundle bundle = getIntent().getBundleExtra(Constants.DATA);
+        if (bundle !=  null) {
+            mPacket = GsonUtils.fromJson(bundle.getString(Constants.PACKET_DATA),Packet.class);
+        }
     }
 }

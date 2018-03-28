@@ -65,7 +65,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_marginTop">@dimen/spacing_medium</item>
         <item name="android:layout_marginBottom">@dimen/spacing_medium</item>
-        <item name="android:textColorHint">@color/colorPrimaryDark</item>
+        <item name="android:textColorHint">@color/colorAppBG</item>
     </style>
     <style name="myEditText">
         <item name="android:layout_width">match_parent</item>

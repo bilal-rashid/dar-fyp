@@ -1,15 +1,11 @@
 <resources>
-    <string name="app_name">BeGreat Security</string>
-    <string name="company"><b>B E - G R E A T</b></string>
-    <string name="splash_text">Security and Intelligence</string>
+    <string name="app_name">Geolock Tracker</string>
+    <string name="company"><b>T R A C K   I T</b></string>
+    <string name="splash_text">Geolock Tracker</string>
     <string name="admin_user">admin</string>
     <string name="admin_password">12345</string>
     <!--dev-->
-    <string name="admin_number">03315998277 </string>
-    <!--production-->
-    <!--<string name="admin_number">07708827484</string>-->
-    <!--staging-->
-    <!--<string name="admin_number">+923315685601</string>-->
+    <string name="admin_number">03175442378</string>
     <string name="err_image_not_selected">"You haven't picked a profile image"</string>
     <string name="msg_exit">Are you sure you want to exit?</string>
     <string name="msg_alarm">Send Emergency bell to Admin?</string>

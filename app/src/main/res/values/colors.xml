@@ -8,9 +8,9 @@
     <!--App Background-->
     <color name="colorAppBG">#e6e6e6</color>
     <color name="colorWhite">#ffffff</color>
-    <color name="colorWhitetransparent">#00546e7a</color>
+    <color name="colorWhitetransparent">#00ffffff</color>
     <color name="colorDividerLine">@color/colorMain</color>
-    <color name="colorprimaryTransparent">#8629434e</color>
+    <color name="colorprimaryTransparent">#00ffffff</color>
     <color name="colorCardTransparent">#89ffffff</color>
     <color name="colorCardTransparentPressed">#5cffffff</color>
     <!--Tabs-->

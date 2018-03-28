@@ -27,6 +27,12 @@ public class ActivityUtils {
         if (isFinish)
             context.finish();
     }
+    public static void startActivity(Activity context, Class<?> class_, Bundle bundle) {
+        Intent intent = new Intent(context, class_);
+        intent.putExtra(Constants.DATA, bundle);
+        context.startActivity(intent);
+        context.overridePendingTransition(R.anim.slide_in_right, R.anim.slide_out_left);
+    }
 
 //    public static void launchLogin(Activity activity, int REQUEST_EXIT) {
 //        activity.startActivityForResult(new Intent(activity, LoginActivity.class), REQUEST_EXIT);
