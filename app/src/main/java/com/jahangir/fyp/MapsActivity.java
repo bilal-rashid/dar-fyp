@@ -9,6 +9,8 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 import com.jahangir.fyp.enumerations.StatusEnum;
 import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.models.Packet;
@@ -34,6 +36,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         manipulateBundle();
         if(mPacket.status.equals(StatusEnum.CHECKOUT.getName())){
             mPacketList = AttendanceUtils.getJobPackets(this,mPacket,mDriver.number);
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference("message");
+
+            myRef.setValue("Hello, World!");
 
         }else {
             try {
