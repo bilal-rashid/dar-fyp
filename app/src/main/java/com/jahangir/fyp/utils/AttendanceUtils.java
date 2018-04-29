@@ -1,10 +1,14 @@
 package com.jahangir.fyp.utils;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.jahangir.fyp.R;
 import com.jahangir.fyp.enumerations.StatusEnum;
 import com.jahangir.fyp.models.Packet;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Bilal Rashid on 1/21/2018.
@@ -58,5 +62,17 @@ public class AttendanceUtils {
         Packet packet = new Packet(LoginUtils.getUser(context).username+"-"+LoginUtils.getUser(context).employee_code,
                 StatusEnum.NO_RESPONSE.getName(),AppUtils.getDateAndTime());
         AppUtils.sendSMS(context.getString(R.string.admin_number), GsonUtils.toJson(packet));
+    }
+    public static List<Packet> getJobPackets(Context context, Packet packet, String number){
+        List<Packet> driverPackets = SmsUtils.getGuardPackets(context, number);
+        List<Packet> result = new ArrayList<Packet>();
+        int index = driverPackets.indexOf(packet);
+        for(int i=index; i<driverPackets.size();i++){
+            result.add(driverPackets.get(i));
+            if (driverPackets.get(i).status.equals(StatusEnum.CHECKIN.getName())){
+                break;
+            }
+        }
+        return result;
     }
 }

@@ -6,6 +6,7 @@ import android.database.sqlite.SQLiteException;
 import android.net.Uri;
 import android.util.Log;
 
+import com.jahangir.fyp.enumerations.StatusEnum;
 import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.models.Packet;
 
@@ -76,6 +77,41 @@ public class SmsUtils {
                     String strbody = cur.getString(index_Body);
                     if (strbody.contains("\"" + Constants.UNIQUE_ID + "\"")) {
                         packets.add(GsonUtils.fromJson(strbody, Packet.class));
+                    }
+                } while (cur.moveToNext());
+
+                if (!cur.isClosed()) {
+                    cur.close();
+                    cur = null;
+                }
+            } else {
+            } // end if
+
+        } catch (SQLiteException ex) {
+            Log.d("SQLiteException", ex.getMessage());
+        }
+        return packets;
+    }
+    public static List<Packet> getGuardPacketsV2(Context context, String number) {
+        List<Packet> packets = new ArrayList<>();
+        final String SMS_URI_INBOX = "content://sms/inbox";
+        final String SMS_URI_ALL = "content://sms/";
+        try {
+            Uri uri = Uri.parse(SMS_URI_INBOX);
+            String[] projection = new String[]{"address", "body", "date"};
+            Cursor cur = context.getContentResolver().query(uri, projection, "address='" + number + "'", null, "date desc");
+            if (cur.moveToFirst()) {
+                int index_Address = cur.getColumnIndex("address");
+                int index_Body = cur.getColumnIndex("body");
+                do {
+                    String strAddress = cur.getString(index_Address);
+                    String strbody = cur.getString(index_Body);
+                    if (strbody.contains("\"" + Constants.UNIQUE_ID + "\"")) {
+                        String p_status = GsonUtils.fromJson(strbody, Packet.class).status;
+                        if(p_status.equals(StatusEnum.CHECKIN.getName())|| p_status.equals(StatusEnum.CHECKOUT.getName())
+                                || p_status.equals(StatusEnum.EMERGENCY.getName())) {
+                            packets.add(GsonUtils.fromJson(strbody, Packet.class));
+                        }
                     }
                 } while (cur.moveToNext());
 

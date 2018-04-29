@@ -36,5 +36,19 @@
         android:title="Change Profile"
         android:visible="true"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_collapse"
+        android:name="Collapse"
+        android:enabled="true"
+        android:title="Collapse"
+        android:visible="true"
+        app:showAsAction="never" />
+    <item
+        android:id="@+id/action_expand"
+        android:name="Expand"
+        android:enabled="true"
+        android:title="Expand"
+        android:visible="true"
+        app:showAsAction="never" />
 
 </menu>

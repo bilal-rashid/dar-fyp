@@ -61,7 +61,7 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
         super.onViewCreated(view, savedInstanceState);
         mHolder = new ViewHolder(view);
         manipulateBundle();
-        mPacketList = SmsUtils.getGuardPackets(getContext(), mDriver.number);
+        mPacketList = SmsUtils.getGuardPacketsV2(getContext(), mDriver.number);
         mHolder.emp_id_text.setText(mDriver.emp_id);
         if(mPacketList.size() > 0){
             setupRecyclerView();
@@ -72,7 +72,7 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
             @Override
             public void onRefresh() {
                 mHolder.swipeRefreshLayout.setRefreshing(false);
-                mPacketList = SmsUtils.getGuardPackets(getContext(), mDriver.number);
+                mPacketList = SmsUtils.getGuardPacketsV2(getContext(), mDriver.number);
                 if(mPacketList.size() > 0){
                     setupRecyclerView();
                     populateData(mPacketList);
@@ -103,6 +103,7 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
         Packet packet = (Packet) data;
         Bundle bundle = new Bundle();
         bundle.putString(Constants.PACKET_DATA, GsonUtils.toJson(packet));
+        bundle.putString(Constants.GUARD_DATA, GsonUtils.toJson(mDriver));
         ActivityUtils.startActivity(getActivity(), MapsActivity.class,bundle);
     }
 
@@ -142,6 +143,24 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
                 return true;
             case R.id.action_flash:
                 sendTrigger("flash");
+                return true;
+            case R.id.action_collapse:
+                mHolder.swipeRefreshLayout.setRefreshing(false);
+                mPacketList = SmsUtils.getGuardPacketsV2(getContext(), mDriver.number);
+                if(mPacketList.size() > 0){
+                    setupRecyclerView();
+                    populateData(mPacketList);
+                }else {
+                }
+                return true;
+            case R.id.action_expand:
+                mHolder.swipeRefreshLayout.setRefreshing(false);
+                mPacketList = SmsUtils.getGuardPackets(getContext(), mDriver.number);
+                if(mPacketList.size() > 0){
+                    setupRecyclerView();
+                    populateData(mPacketList);
+                }else {
+                }
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
