@@ -106,18 +106,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 point_long = Double.parseDouble(separated[1]);
                 if(i==0){
                     mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
-                            title(time_format.format(cal.getTime())+"  "+
-                                    date_format.format(cal.getTime())).snippet(mPacketList.get(i).status)
+                            snippet(time_format.format(cal.getTime())+"  "+
+                                    date_format.format(cal.getTime())).title(mPacketList.get(i).status)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
                 }else if (i==mPacketList.size()-1){
                     mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
-                            title(time_format.format(cal.getTime())+"  "+
-                                    date_format.format(cal.getTime())).snippet(mPacketList.get(i).status)
+                            snippet(time_format.format(cal.getTime())+"  "+
+                                    date_format.format(cal.getTime())).title(mPacketList.get(i).status)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
                 }else {
                     mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
-                            title(time_format.format(cal.getTime())+"  "+
-                                    date_format.format(cal.getTime())).snippet(mPacketList.get(i).status)
+                            snippet(time_format.format(cal.getTime())+"  "+
+                                    date_format.format(cal.getTime())).title(mPacketList.get(i).status)
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
                 }
                 line.add(new LatLng(point_lat,point_long));
