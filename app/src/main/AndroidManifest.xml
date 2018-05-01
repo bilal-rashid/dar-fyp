@@ -90,6 +90,9 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.jahangir.fyp.FrameActivity" />
         </activity>
+        <service
+            android:name=".service.LiveLocationService"
+            android:exported="false"/>
     </application>
 
 </manifest>

@@ -34,6 +34,7 @@ import com.jahangir.fyp.FrameActivity;
 import com.jahangir.fyp.R;
 import com.jahangir.fyp.dialog.SimpleDialog;
 import com.jahangir.fyp.models.User;
+import com.jahangir.fyp.service.LiveLocationService;
 import com.jahangir.fyp.toolbox.ToolbarListener;
 import com.jahangir.fyp.utils.ActivityUtils;
 import com.jahangir.fyp.utils.AppUtils;
@@ -216,6 +217,8 @@ public class DriverHomeFragment extends Fragment implements View.OnClickListener
                                                 new String[]{Manifest.permission.SEND_SMS},
                                                 MY_SMS_REQ_CODE_CHECKOUT);
                                     } else {
+                                        // stop service here
+                                        getContext().stopService(new Intent(getContext(), LiveLocationService.class)); // stop
                                         mHolder.checkoutCard.setEnabled(false);
                                         mHolder.checkoutCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
                                         mHolder.checkinCard.setEnabled(true);
@@ -303,6 +306,10 @@ public class DriverHomeFragment extends Fragment implements View.OnClickListener
                 Double.toString(location.getLongitude());
         if(status == 1){
             AttendanceUtils.sendCheckin(getContext(),loc);
+            // start service here
+            Intent cbIntent = new Intent();
+            cbIntent.setClass(getContext(), LiveLocationService.class);
+            getContext().startService(cbIntent);
         }else if (status == 2) {
             AttendanceUtils.sendCheckout(getContext(),loc);
         }else {
@@ -389,6 +396,7 @@ public class DriverHomeFragment extends Fragment implements View.OnClickListener
                 // If request is cancelled, the result arrays are empty.
                 if (grantResults.length > 0
                         && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    getContext().stopService(new Intent(getContext(), LiveLocationService.class)); // stop
                     mHolder.checkoutCard.setEnabled(false);
                     mHolder.checkoutCard.setCardBackgroundColor(ContextCompat.getColor(getActivity(), R.color.grey));
                     AttendanceUtils.checkoutGuard(getContext());
