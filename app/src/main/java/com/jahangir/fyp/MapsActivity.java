@@ -84,6 +84,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         mMap = googleMap;
         String[] separated;
         double point_lat,point_long;
+        SimpleDateFormat time_format = new SimpleDateFormat("hh:mm a");
+        SimpleDateFormat date_format = new SimpleDateFormat("dd-MMM-yyyy");
 
         // Add a marker in Sydney and move the camera
         if(mPacket.status.equals(StatusEnum.CHECKOUT.getName())){
@@ -99,8 +101,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 }catch (ParseException e){
 
                 }
-                SimpleDateFormat time_format = new SimpleDateFormat("hh:mm a");
-                SimpleDateFormat date_format = new SimpleDateFormat("dd-MMM-yyyy");
                 separated = mPacketList.get(i).point.split("_");
                 point_lat = Double.parseDouble(separated[0]);
                 point_long = Double.parseDouble(separated[1]);
