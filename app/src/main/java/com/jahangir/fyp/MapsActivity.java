@@ -1,14 +1,18 @@
 package com.jahangir.fyp;
 
+import android.graphics.Color;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.jahangir.fyp.enumerations.StatusEnum;
@@ -18,6 +22,10 @@ import com.jahangir.fyp.utils.AttendanceUtils;
 import com.jahangir.fyp.utils.Constants;
 import com.jahangir.fyp.utils.GsonUtils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
@@ -36,10 +44,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         manipulateBundle();
         if(mPacket.status.equals(StatusEnum.CHECKOUT.getName())){
             mPacketList = AttendanceUtils.getJobPackets(this,mPacket,mDriver.number);
-            FirebaseDatabase database = FirebaseDatabase.getInstance();
-            DatabaseReference myRef = database.getReference("message");
-
-            myRef.setValue("Hello, World!");
+//            FirebaseDatabase database = FirebaseDatabase.getInstance();
+//            DatabaseReference myRef = database.getReference("message");
+//            myRef.setValue("Hello, World!");
 
         }else {
             try {
@@ -50,11 +57,10 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 latitude = Double.parseDouble("31.5");
                 longitude = Double.parseDouble("74.3");
             }
-            // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            mapFragment.getMapAsync(this);
         }
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
     }
 
     @Override
@@ -76,9 +82,51 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        String[] separated;
+        double point_lat,point_long;
 
         // Add a marker in Sydney and move the camera
         if(mPacket.status.equals(StatusEnum.CHECKOUT.getName())){
+            PolylineOptions line = new PolylineOptions().width(5).color(Color.GREEN);
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+            Date date = null;
+            Calendar cal = null;
+            for (int i = 0; i<mPacketList.size(); i++) {
+                try {
+                    date = format.parse(mPacketList.get(i).date_time);
+                    cal = Calendar.getInstance();
+                    cal.setTime(date);
+                }catch (ParseException e){
+
+                }
+                SimpleDateFormat time_format = new SimpleDateFormat("hh:mm a");
+                SimpleDateFormat date_format = new SimpleDateFormat("dd-MMM-yyyy");
+                separated = mPacketList.get(i).point.split("_");
+                point_lat = Double.parseDouble(separated[0]);
+                point_long = Double.parseDouble(separated[1]);
+                if(i==0){
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
+                            title(time_format.format(cal.getTime())+"  "+
+                                    date_format.format(cal.getTime())).snippet(mPacketList.get(i).status)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                }else if (i==mPacketList.size()-1){
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
+                            title(time_format.format(cal.getTime())+"  "+
+                                    date_format.format(cal.getTime())).snippet(mPacketList.get(i).status)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                }else {
+                    mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
+                            title(time_format.format(cal.getTime())+"  "+
+                                    date_format.format(cal.getTime())).snippet(mPacketList.get(i).status)
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                }
+                line.add(new LatLng(point_lat,point_long));
+                if(i == mPacketList.size()-1){
+                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(point_lat,point_long)));
+                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+                }
+            }
+            mMap.addPolyline(line);
 
         }else {
             LatLng sydney = new LatLng(latitude, longitude);
