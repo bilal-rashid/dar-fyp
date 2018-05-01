@@ -44,9 +44,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         manipulateBundle();
         if(mPacket.status.equals(StatusEnum.CHECKOUT.getName())){
             mPacketList = AttendanceUtils.getJobPackets(this,mPacket,mDriver.number);
-//            FirebaseDatabase database = FirebaseDatabase.getInstance();
-//            DatabaseReference myRef = database.getReference("message");
-//            myRef.setValue("Hello, World!");
 
         }else {
             try {
