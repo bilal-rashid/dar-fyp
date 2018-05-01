@@ -11,10 +11,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 import com.jahangir.fyp.enumerations.StatusEnum;
 import com.jahangir.fyp.models.Driver;
 import com.jahangir.fyp.models.Packet;
@@ -35,6 +39,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Driver mDriver;
     double longitude,latitude;
     List<Packet> mPacketList;
+    Marker mMarker;
+    boolean live_data;
 
 
     @Override
@@ -42,17 +48,21 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         manipulateBundle();
-        if(mPacket.status.equals(StatusEnum.CHECKOUT.getName())){
-            mPacketList = AttendanceUtils.getJobPackets(this,mPacket,mDriver.number);
+        if(live_data){
 
         }else {
-            try {
-                String[] separated = mPacket.point.split("_");
-                latitude = Double.parseDouble(separated[0]);
-                longitude = Double.parseDouble(separated[1]);
-            } catch (Exception e) {
-                latitude = Double.parseDouble("31.5");
-                longitude = Double.parseDouble("74.3");
+            if (mPacket.status.equals(StatusEnum.CHECKOUT.getName())) {
+                mPacketList = AttendanceUtils.getJobPackets(this, mPacket, mDriver.number);
+
+            } else {
+                try {
+                    String[] separated = mPacket.point.split("_");
+                    latitude = Double.parseDouble(separated[0]);
+                    longitude = Double.parseDouble(separated[1]);
+                } catch (Exception e) {
+                    latitude = Double.parseDouble("31.5");
+                    longitude = Double.parseDouble("74.3");
+                }
             }
         }
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -76,60 +86,100 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
      * it inside the SupportMapFragment. This method will only be triggered once the user has
      * installed Google Play services and returned to the app.
      */
+    public int counter;
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+        counter = 0;
         String[] separated;
         double point_lat,point_long;
         SimpleDateFormat time_format = new SimpleDateFormat("hh:mm a");
         SimpleDateFormat date_format = new SimpleDateFormat("dd-MMM-yyyy");
 
         // Add a marker in Sydney and move the camera
-        if(mPacket.status.equals(StatusEnum.CHECKOUT.getName())){
-            PolylineOptions line = new PolylineOptions().width(5).color(Color.GREEN);
-            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-            Date date = null;
-            Calendar cal = null;
-            for (int i = 0; i<mPacketList.size(); i++) {
-                try {
-                    date = format.parse(mPacketList.get(i).date_time);
-                    cal = Calendar.getInstance();
-                    cal.setTime(date);
-                }catch (ParseException e){
+        if (live_data){
+            FirebaseDatabase database = FirebaseDatabase.getInstance();
+            DatabaseReference myRef = database.getReference(mDriver.emp_id);
+            myRef.addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot dataSnapshot) {
+                    // This method is called once with the initial value and again
+                    // whenever data at this location is updated.
+                    try {
+                        String value = dataSnapshot.getValue(String.class);
+                        String[] separated = value.split("_");
+                        latitude = Double.parseDouble(separated[0]);
+                        longitude = Double.parseDouble(separated[1]);
+                        Log.d("TAAAG", "Value is: " + value);
+                        if(mMarker!=null){
+                            mMarker.remove();
+                        }
+                        mMarker = mMap.addMarker(new MarkerOptions().position(new LatLng(latitude, longitude))
+                                .title("Live Location")
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                        mMap.animateCamera(CameraUpdateFactory.newLatLng(new LatLng(latitude, longitude)));
+                        if(counter == 0) {
+                            mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+                        }
+                        counter++;
+                    }catch (Exception e){e.printStackTrace();}
 
                 }
-                separated = mPacketList.get(i).point.split("_");
-                point_lat = Double.parseDouble(separated[0]);
-                point_long = Double.parseDouble(separated[1]);
-                if(i==0){
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
-                            snippet(time_format.format(cal.getTime())+"  "+
-                                    date_format.format(cal.getTime())).title(mPacketList.get(i).status)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
-                }else if (i==mPacketList.size()-1){
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
-                            snippet(time_format.format(cal.getTime())+"  "+
-                                    date_format.format(cal.getTime())).title(mPacketList.get(i).status)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
-                }else {
-                    mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat,point_long)).
-                            snippet(time_format.format(cal.getTime())+"  "+
-                                    date_format.format(cal.getTime())).title(mPacketList.get(i).status)
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    // Failed to read value
+                    Log.w("TAAAG", "Failed to read value.", error.toException());
                 }
-                line.add(new LatLng(point_lat,point_long));
-                if(i == mPacketList.size()-1){
-                    mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(point_lat,point_long)));
-                    mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
-                }
-            }
-            mMap.addPolyline(line);
+            });
 
         }else {
-            LatLng sydney = new LatLng(latitude, longitude);
-            mMap.addMarker(new MarkerOptions().position(sydney).title(mPacket.status));
-            mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
-            mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+            if (mPacket.status.equals(StatusEnum.CHECKOUT.getName())) {
+                PolylineOptions line = new PolylineOptions().width(5).color(Color.GREEN);
+                SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                Date date = null;
+                Calendar cal = null;
+                for (int i = 0; i < mPacketList.size(); i++) {
+                    try {
+                        date = format.parse(mPacketList.get(i).date_time);
+                        cal = Calendar.getInstance();
+                        cal.setTime(date);
+                    } catch (ParseException e) {
+
+                    }
+                    separated = mPacketList.get(i).point.split("_");
+                    point_lat = Double.parseDouble(separated[0]);
+                    point_long = Double.parseDouble(separated[1]);
+                    if (i == 0) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat, point_long)).
+                                snippet(time_format.format(cal.getTime()) + "  " +
+                                        date_format.format(cal.getTime())).title(mPacketList.get(i).status)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)));
+                    } else if (i == mPacketList.size() - 1) {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat, point_long)).
+                                snippet(time_format.format(cal.getTime()) + "  " +
+                                        date_format.format(cal.getTime())).title(mPacketList.get(i).status)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)));
+                    } else {
+                        mMap.addMarker(new MarkerOptions().position(new LatLng(point_lat, point_long)).
+                                snippet(time_format.format(cal.getTime()) + "  " +
+                                        date_format.format(cal.getTime())).title(mPacketList.get(i).status)
+                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_RED)));
+                    }
+                    line.add(new LatLng(point_lat, point_long));
+                    if (i == mPacketList.size() - 1) {
+                        mMap.moveCamera(CameraUpdateFactory.newLatLng(new LatLng(point_lat, point_long)));
+                        mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+                    }
+                }
+                mMap.addPolyline(line);
+
+            } else {
+                LatLng sydney = new LatLng(latitude, longitude);
+                mMap.addMarker(new MarkerOptions().position(sydney).title(mPacket.status));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(sydney));
+                mMap.animateCamera(CameraUpdateFactory.zoomTo(17.0f));
+            }
         }
     }
     private void manipulateBundle() {
@@ -137,6 +187,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         if (bundle !=  null) {
             mPacket = GsonUtils.fromJson(bundle.getString(Constants.PACKET_DATA),Packet.class);
             mDriver = GsonUtils.fromJson(bundle.getString(Constants.GUARD_DATA),Driver.class);
+            live_data = bundle.getBoolean(Constants.LIVE_DATA,false);
         }
     }
 }

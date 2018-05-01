@@ -50,5 +50,12 @@
         android:title="Expand"
         android:visible="true"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/action_live"
+        android:name="Live Location"
+        android:enabled="true"
+        android:title="Live Location"
+        android:visible="true"
+        app:showAsAction="never" />
 
 </menu>

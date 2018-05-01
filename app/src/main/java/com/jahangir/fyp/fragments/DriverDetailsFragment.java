@@ -104,6 +104,7 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
         Bundle bundle = new Bundle();
         bundle.putString(Constants.PACKET_DATA, GsonUtils.toJson(packet));
         bundle.putString(Constants.GUARD_DATA, GsonUtils.toJson(mDriver));
+        bundle.putBoolean(Constants.LIVE_DATA, false);
         ActivityUtils.startActivity(getActivity(), MapsActivity.class,bundle);
     }
 
@@ -161,6 +162,12 @@ public class DriverDetailsFragment extends Fragment implements OnItemClickListen
                     populateData(mPacketList);
                 }else {
                 }
+                return true;
+            case R.id.action_live:
+                Bundle bundle = new Bundle();
+                bundle.putString(Constants.GUARD_DATA, GsonUtils.toJson(mDriver));
+                bundle.putBoolean(Constants.LIVE_DATA, true);
+                ActivityUtils.startActivity(getActivity(), MapsActivity.class,bundle);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);

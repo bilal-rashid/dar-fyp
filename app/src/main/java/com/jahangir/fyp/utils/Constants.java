@@ -18,5 +18,6 @@ public class Constants {
     public static final long INTERVAL = 1000 * 60 * 1;
     public static final String GUARD_DATA = "guard_data";
     public static final String PACKET_DATA = "packet_data";
+    public static final String LIVE_DATA = "live_data";
 
 }
